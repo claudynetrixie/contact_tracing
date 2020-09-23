@@ -25,6 +25,14 @@
         <input type="submit" />
     </form>
 
+    {% for stat in stats %}
+    <tr>
+        <td>{{stat.time_range}}</td>
+        <td>{{stat.count}}</td>
+    </tr>
+    {% endfor %}
+
+
 
     <div id="container" style="width: 75%;">
     <canvas id="population-chart" data-url="{% url 'contact_tracing:homepage' %}"></canvas>

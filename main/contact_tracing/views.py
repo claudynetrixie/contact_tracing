@@ -142,40 +142,67 @@ def homepage(request):
 
     room_count = []
     room_number = 10
-    for room in range(1, room_number + 1):
-        print(room)
-        mydict = {"room_id": room,
-                  "date_start": "2020-08-09",
-                  "date_end": "2020-08-15",
-                  "time_start": "8:00",
-                  "time_end": "16:00"}
+    # for room in range(1, room_number + 1):
+    #     print(room)
+    #     mydict = {"room_id": room,
+    #               "date_start": "2020-08-09",
+    #               "date_end": "2020-08-15",
+    #               "time_start": "8:00",
+    #               "time_end": "16:00"}
+    #
+    #     qstr = urlencode(mydict, doseq=True)
+    #
+    #     res = urllib.request.urlopen(urllib.request.Request(
+    #          # url= "https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?room_id=12&date_start=2020-08-09&date_end=2020-08-15&time_start=8:00&time_end=16:00",
+    #         url = 'https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?' + qstr,
+    #         headers={'Accept': 'application/json', 'Connection': 'keep-alive'},
+    #         method='GET'),
+    #         timeout=5)
+    #     # print(res.status)
+    #     # print(res.reason)
+    #     # print(json.loads(res.read()))
+    #     response = json.loads(res.read())
+    #     p = {'room': room, 'count': response['count']}
+    #     room_count.append(p)
 
-        qstr = urlencode(mydict, doseq=True)
+    mydict = {"room_id": 1,
+                "date_start": "2020-08-09",
+                "date_end": "2020-08-15",
+                "time_start": "8:00",
+                "time_end": "16:00"}
 
-        res = urllib.request.urlopen(urllib.request.Request(
-             # url= "https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?room_id=12&date_start=2020-08-09&date_end=2020-08-15&time_start=8:00&time_end=16:00",
-            url = 'https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?' + qstr,
-            headers={'Accept': 'application/json', 'Connection': 'keep-alive'},
-            method='GET'),
-            timeout=5)
-        # print(res.status)
-        # print(res.reason)
-        # print(json.loads(res.read()))
-        response = json.loads(res.read())
-        p = {'room': room, 'count': response['count']}
-        room_count.append(p)
+    qstr = urlencode(mydict, doseq=True)
+    res = urllib.request.urlopen(urllib.request.Request(
+           # url= "https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?room_id=12&date_start=2020-08-09&date_end=2020-08-15&time_start=8:00&time_end=16:00",
+          url = 'https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?' + qstr,
+          headers={'Accept': 'application/json', 'Connection': 'keep-alive'},
+          method='GET'),
+          timeout=5)
+      # print(res.status)
+      # print(res.reason)
+      # print(json.loads(res.read()))
+    response = json.loads(res.read())
+    #print(response)
+
+    room_count_s = sorted(response, key=itemgetter('count'), reverse=True)[0:num]
+    # room_count_s = response[0:num]
+    for entry in room_count_s:
+        labels.append(entry['room'])
+        data.append(entry['count'])
+
+    print(data)
 
     toc = time.perf_counter()
     print(f"End of for loop in {toc - tic:0.4f} seconds")
 
-    room_count_s = sorted(room_count, key=itemgetter('count'), reverse=True)[0:num]
+    # room_count_s = sorted(room_count, key=itemgetter('count'), reverse=True)[0:num]
 
     toc = time.perf_counter()
     print(f"Sorted in {toc - tic:0.4f} seconds")
 
-    for entry in room_count_s:
-        labels.append(entry['room'])
-        data.append(entry['count'])
+    # for entry in room_count_s:
+    #     labels.append(entry['room'])
+    #     data.append(entry['count'])
 
     toc = time.perf_counter()
     print(f"Chart loading data in {toc - tic:0.4f} seconds")
