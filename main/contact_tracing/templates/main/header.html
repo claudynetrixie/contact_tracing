@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+	  {% load static %}
+
+  	<title>Hound</title>
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="{% static "css/style.css" %}">
+
+  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+
+
+  </head>
+  <body>
+
+		<div class="wrapper d-flex align-items-stretch">
+			<nav id="sidebar">
+				<div class="custom-menu">
+					<button type="button" id="sidebarCollapse" class="btn btn-primary">
+	          <i class="fa fa-bars"></i>
+	          <span class="sr-only">Toggle Menu</span>
+	        </button>
+        </div>
+				<div class="p-4">
+		  		<h1><a href="/" class="logo">CTeee    <i class="fa fa-map-marker" aria-hidden="true"></i>
+					<span>Contact Tracing and  </span><span> Indoor Foot Traffic Tracking System</span></a></h1>
+	        <ul class="list-unstyled components mb-5">
+
+	          <li class="active">
+	            <a href="/"><span class="fa fa-home mr-3"></span> Home</a>
+	          </li>
+				<li>
+	            <a href="/stat_search/"><span class="fa fa-search mr-3"></span> Search</a>
+	          </li>
+			  <li>
+	            <a href="/"><span class="fa fa-pencil-square-o mr-3"></span> Register</a>
+	          </li>
+			 {% if user.is_authenticated %}
+				 <li><a href="/account"> <span class = "fa fa-user mr-3"> </span>  {{user.username|title}}</a></li>
+				{% if user.is_parent %}
+					{% for student in students%}
+						{% for sp in student.parent.all %}
+							{%if sp.user.id == user.id %}
+								<li><a href="/child_stats/{{student.first_name}}">
+									<span class = "fa fa-graduation-cap mr-3"> </span>{{student.first_name}}</a></li>
+							{% endif %}
+						{% endfor %}
+					{% endfor %}
+
+   					<li><a href="/calendar"><span class = "fa fa-calendar mr-3"> </span> Calendar</a></li>
+					<li><a href="/calendar-new"><span class = "fa fa-calendar mr-3"> </span> Calendar2</a></li>
+				{%endif %}
+<!--				admin-->
+				{% if user.id == 5 %}
+					<li><a href="/students"> <span class = "fa fa-search mr-3"> </span> Section</a></li>
+				{%endif %}
+
+				{% if user.is_teacher %}
+					<li><a href="/stud_attendance"> <span class = "fa fa-search mr-3"> </span> Section</a></li>
+				{%endif %}
+
+			{% else %}
+				<li><a href="/login"><span class = "fa fa-sign-in mr-3"> </span> Login</a></li>
+			{% endif %}
+			  <li><a href="/contact_us"><span class="fa fa-paper-plane mr-3"></span> Contact Us</a>	</li>
+
+
+
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+			</br>
+
+			{% if user.is_authenticated %}
+			<li><a href="/logout"><span class = "fa fa-sign-out mr-3"> </span> Logout</a></li>
+			{% endif %}
+
+      </ul>
+
+	        </ul>
+
+	      </div>
+    	</nav>
+
+      <div id="content" class="p-4 p-md-5 pt-5">
+
+
+        <h2 class="mb-4">
+			{% block main %}
+			{% endblock %}
+		</h2>
+
+
+      </div>
+
+		</div>
+
+
+<!--	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
+
+
+<!--    <script src="{% static "js/jquery.min.js" %}"></script>-->
+	<script src="{% static "js/popper.js" %}"></script>
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+    <script src="{% static "js/main.js" %}"></script>
+
+
+  	<script>
+    setTimeout(function(){
+      if ($('#msg').length > 0) {
+        $('#msg').remove();
+      }
+    }, 10000)
+  </script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+  </body>
+</html>

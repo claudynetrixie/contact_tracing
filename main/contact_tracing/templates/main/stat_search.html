@@ -1,0 +1,116 @@
+{% extends 'templates/main/header.html' %}
+
+{% block main %}
+
+
+
+<div></div>
+    <form method="get" id="queryForm" data-rooms-url="{% url 'contact_tracing:ajax_load_rooms' %}" novalidate>
+<!--        {% csrf_token %}-->
+<!--        <tr>-->
+<!--            <label for="datetime0" > Date-Time Range</label>-->
+<!--            <input type="text" name="datetimes" >-->
+<!--        </tr>-->
+<!--        <br>-->
+
+        <tr>
+            <th>
+                <label for="id_date_0">Date:</label>
+            </th>
+            <td>
+                <input type = "date" name="date_before" value="{{date_bf}}" id="id_date_0">
+                -
+                <input type="date" name="date_after" value="{{date_af}}" id="id_date_1">
+            </td>
+        </tr>
+        <br>
+
+        <tr><th><label for="id_time_0">Time:</label></th><td><input type="time" name="time_before" value = "{{time_bf}}"id="id_time_0">
+            -<input type="time" name="time_after" value = "{{time_af}}" id="id_time_1"></td></tr>
+
+<!--        <div class="form-group row">-->
+<!--          <label for="id_time_0" class="col-2 col-form-label">Time</label>-->
+<!--          <div class="col-10">-->
+<!--            <input class="form-control" type="time" value="13:45:00" id="example-time-input">-->
+<!--          </div>-->
+<!--        </div>-->
+
+        <br>
+
+        {{filter_r.form}}
+        {{filter.form}}
+
+        <input type="submit" />
+    </form>
+
+    <div class="row">
+        <div class="col-md">
+            <div class="card card-body">
+                <table class="table table-sm">
+                    <tr>
+                        <th>Room  </th>
+                        <th>Date</th>
+<!--                        <th>Time  </th>-->
+                        <th>Time Range</th>
+                        <th>Count </th>
+
+                    </tr>
+
+                    {% for stat in stats %}
+                    <tr>
+                        <td>{{stat.room_id}}</td>
+                        <td>{{stat.date}}</td>
+<!--                        <td>{{stat.time}}</td>-->
+                        <td>{{stat.time_range}}</td>
+                        <td>{{stat.count}}</td>
+                    </tr>
+                    {% endfor %}
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+
+
+<!--    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
+
+      <script>
+<!--        $(function() {-->
+<!--          $('input[name="datetimes"]').daterangepicker({-->
+<!--            timePicker: true,-->
+<!--            startDate: moment().startOf('hour'),-->
+<!--            endDate: moment().startOf('hour').add(32, 'hour'),-->
+<!--            locale: {-->
+<!--              format: 'M/DD hh:mm A'-->
+<!--            }-->
+<!--          });-->
+<!--        });-->
+
+        $("#id_building").change(function () {
+          var url = $("#queryForm").attr("data-rooms-url");  // get the url of the `load_cities` view
+          var buildingId = $(this).val();  // get the selected country ID from the HTML input
+
+          $.ajax({                       // initialize an AJAX request
+            url: url,                    // set the url of the request (= localhost:8000/hr/ajax/load-cities/)
+            data: {
+              'building': buildingId    // add the country id to the GET parameters
+            },
+            success: function (data) {   // `data` is the return of the `load_cities` view function
+              $("#id_room").html(data);  // replace the contents of the city input with the data that came from the server
+            }
+          });
+
+        });
+        document.getElementById("myText").defaultValue = "Goofy";
+
+     </script>
+
+
+{%endblock%}

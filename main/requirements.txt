@@ -1,0 +1,2 @@
+mysql-connector-python==8.0.21
+pytz==2020.1
