@@ -1,7 +1,8 @@
 # pip freeze > requirements.txt
+# from celery.decorators import task
 from django.shortcuts import render
 from .models import *
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from operator import itemgetter
 
 from .filters import StatFilter, RoomFilter
@@ -16,15 +17,10 @@ date_start = "2020-08-09"
 date_end = "2020-08-15"
 
 room_number = 300
-
+num = 10
 
 def homepage(request):
     tic = time.perf_counter()
-
-    # top 10 most populated
-    num = 10
-    labels = []
-    data = []
 
     filter_r = RoomFilter(request.GET, queryset=Room.objects.all())
     filter_r.form.fields['building'].label = "Area"
@@ -133,37 +129,25 @@ def homepage(request):
     #     labels.append(entry['room'])
     #     data.append(entry['count'])
     #
-    # print(labels)
-    # print(data)
-    # print(f"For loop in {toc - tic:0.4f} seconds")
 
+
+
+
+    return render(request=request,
+                  context={
+                      'filter_r': filter_r,
+                      # 'date_bf': date_bf,
+                      # 'date_af': date_af,
+                      # 'time_bf': time_bf,
+                      # 'time_af': time_af,
+                  },
+                  template_name='templates/main/home.html')
+
+def get_data(request):
     # labels =['F-23', 'F-15', 'D-40', 'A-3', 'C-36', 'A-37', 'A-22', 'D-13', 'F-27', 'B-22']
     # data =[639, 549, 545, 523, 523, 516, 502, 501, 496, 492]
-
-    room_count = []
-    room_number = 10
-    # for room in range(1, room_number + 1):
-    #     print(room)
-    #     mydict = {"room_id": room,
-    #               "date_start": "2020-08-09",
-    #               "date_end": "2020-08-15",
-    #               "time_start": "8:00",
-    #               "time_end": "16:00"}
-    #
-    #     qstr = urlencode(mydict, doseq=True)
-    #
-    #     res = urllib.request.urlopen(urllib.request.Request(
-    #          # url= "https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?room_id=12&date_start=2020-08-09&date_end=2020-08-15&time_start=8:00&time_end=16:00",
-    #         url = 'https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?' + qstr,
-    #         headers={'Accept': 'application/json', 'Connection': 'keep-alive'},
-    #         method='GET'),
-    #         timeout=5)
-    #     # print(res.status)
-    #     # print(res.reason)
-    #     # print(json.loads(res.read()))
-    #     response = json.loads(res.read())
-    #     p = {'room': room, 'count': response['count']}
-    #     room_count.append(p)
+    data = []
+    labels = []
 
     mydict = {"room_id": 1,
                 "date_start": "2020-08-09",
@@ -182,45 +166,17 @@ def homepage(request):
       # print(res.reason)
       # print(json.loads(res.read()))
     response = json.loads(res.read())
-    #print(response)
 
     room_count_s = sorted(response, key=itemgetter('count'), reverse=True)[0:num]
-    # room_count_s = response[0:num]
     for entry in room_count_s:
         labels.append(entry['room'])
         data.append(entry['count'])
 
-    print(data)
+    return JsonResponse(data={
+        'labels': labels,
+        'data': data,
+    })
 
-    toc = time.perf_counter()
-    print(f"End of for loop in {toc - tic:0.4f} seconds")
-
-    # room_count_s = sorted(room_count, key=itemgetter('count'), reverse=True)[0:num]
-
-    toc = time.perf_counter()
-    print(f"Sorted in {toc - tic:0.4f} seconds")
-
-    # for entry in room_count_s:
-    #     labels.append(entry['room'])
-    #     data.append(entry['count'])
-
-    toc = time.perf_counter()
-    print(f"Chart loading data in {toc - tic:0.4f} seconds")
-
-    return render(request=request,
-                  context={
-                      'labels': labels,
-                      'data': data,
-                      'filter_r': filter_r,
-                      # 'date_bf': date_bf,
-                      # 'date_af': date_af,
-                      # 'time_bf': time_bf,
-                      # 'time_af': time_af,
-                  },
-                  template_name='templates/main/home.html')
-
-# def bar_graph(request):
-    
 
 def load_rooms(request):
     building_id = request.GET.get('building')
