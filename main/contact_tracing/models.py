@@ -53,3 +53,5 @@ class LocationLog(models.Model):
 
 class Parameter(models.Model):
     loc_count = models.IntegerField()
+
+    

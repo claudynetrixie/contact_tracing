@@ -48,13 +48,23 @@
             <div class="card card-body">
                 <table class="table table-sm">
                     <tr>
-                        <th>Room  </th>
+                        <th>Site  </th>
                         <th>Date</th>
 <!--                        <th>Time  </th>-->
                         <th>Time Range</th>
                         <th>Count </th>
 
                     </tr>
+
+                    {% for stat in stats %}
+                    <tr>
+                        <td>{{stat.room_id}}</td>
+                        <td>{{stat.date}}</td>
+<!--                        <td>{{stat.time}}</td>-->
+                        <td>{{stat.time_range}}</td>
+                        <td>{{stat.count}}</td>
+                    </tr>
+                    {% endfor %}
 
 
 
@@ -71,20 +81,9 @@
 
 
 
-<!--    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
       <script>
-<!--        $(function() {-->
-<!--          $('input[name="datetimes"]').daterangepicker({-->
-<!--            timePicker: true,-->
-<!--            startDate: moment().startOf('hour'),-->
-<!--            endDate: moment().startOf('hour').add(32, 'hour'),-->
-<!--            locale: {-->
-<!--              format: 'M/DD hh:mm A'-->
-<!--            }-->
-<!--          });-->
-<!--        });-->
-
         $("#id_building").change(function () {
           var url = $("#queryForm").attr("data-rooms-url");  // get the url of the `load_cities` view
           var buildingId = $(this).val();  // get the selected country ID from the HTML input

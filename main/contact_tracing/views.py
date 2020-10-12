@@ -21,12 +21,11 @@ num = 10
 
 def homepage(request):
     tic = time.perf_counter()
-
     filter_r = RoomFilter(request.GET, queryset=Room.objects.all())
     filter_r.form.fields['building'].label = "Area"
 
     toc = time.perf_counter()
-    print(f"Drop down loading in {toc - tic:0.4f} seconds")
+    print(f"Filter menu done in {toc - tic:0.4f} seconds")
 
     # if (request.GET):
     #     payload = request.GET
@@ -144,6 +143,8 @@ def homepage(request):
                   template_name='templates/main/home.html')
 
 def get_data(request):
+    tic = time.perf_counter()
+
     # labels =['F-23', 'F-15', 'D-40', 'A-3', 'C-36', 'A-37', 'A-22', 'D-13', 'F-27', 'B-22']
     # data =[639, 549, 545, 523, 523, 516, 502, 501, 496, 492]
     data = []
@@ -167,10 +168,16 @@ def get_data(request):
       # print(json.loads(res.read()))
     response = json.loads(res.read())
 
+    toc = time.perf_counter()
+    print(f"HTTP get done in {toc - tic:0.4f} seconds")
+
     room_count_s = sorted(response, key=itemgetter('count'), reverse=True)[0:num]
     for entry in room_count_s:
         labels.append(entry['room'])
         data.append(entry['count'])
+
+    toc = time.perf_counter()
+    print(f"Chart data done in {toc - tic:0.4f} seconds")
 
     return JsonResponse(data={
         'labels': labels,
@@ -194,15 +201,29 @@ def stat_search(request):
     stats = Stat.objects.all().order_by('date', 'time')
     filter_r = RoomFilter(request.GET, queryset=Room.objects.all())
     filter_r.form.fields['building'].label = "Area"
+    # stats = filter_r.qs
 
     myFilter = StatFilter(request.GET, queryset=stats)
     stat_f = myFilter.qs
+    myFilter.form.fields['room'].label = "Site"
     # .order_by('date', 'time')
     # buildings = Building.objects.all()
 
     if (request.GET):
         print("HELLO WORLD")
         payload = request.GET
+
+        if request.GET['building']:
+            b_no = request.GET['building']
+            print("find all rooms nums")
+            room_list = list(Room.objects.filter(building_id = b_no).values('id'))
+            room_list = [x['id'] for x in room_list ]
+            print(room_list)
+
+            stat_f = stat_f.filter(room_id__in=room_list)
+
+
+
         if (request.GET['date_before'] and request.GET['date_after'] and request.GET['time_before'] and request.GET[
             'time_after']):
             date_bf = payload['date_before']
@@ -212,6 +233,8 @@ def stat_search(request):
                                    time__range=[time_bf, payload['time_after']])
             time_bf = payload['time_before']
             time_af = payload['time_after']
+            # print(stat_f)
+
         elif request.GET['date_before'] and request.GET['date_after']:
             date_bf = payload['date_before']
             date_af = payload['date_after']
@@ -222,6 +245,8 @@ def stat_search(request):
             stat_f = stat_f.filter(time__range=[time_bf, payload['time_after']])
             time_bf = payload['time_before']
             time_af = payload['time_after']
+
+
 
     else:
         stat_f = {}
