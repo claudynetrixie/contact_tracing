@@ -55,3 +55,18 @@ class Parameter(models.Model):
     loc_count = models.IntegerField()
 
     
+class PeakData(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    time = models.TimeField()
+    rank = models.IntegerField()
+
+
+class PeakHour(models.Model):
+    time = models.TimeField()
+    count = models.IntegerField()
+
+
+class PopData(models.Model):
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    count = models.IntegerField()
+    rank = models.IntegerField()

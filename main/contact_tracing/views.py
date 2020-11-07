@@ -24,8 +24,22 @@ def homepage(request):
     filter_r = RoomFilter(request.GET, queryset=Room.objects.all())
     filter_r.form.fields['building'].label = "Area"
 
+    time_list = []
+    room_list = []
+
+    for x in range(1,6):
+        data = PeakData.objects.filter(rank = x)[0]
+        time_list.append(data.time)
+        room_list.append(data.room)
+
+    num = range(1,6)
+    peaklist = zip(num, time_list, room_list)
+    print(time_list)
+    print(room_list)
+
     toc = time.perf_counter()
     print(f"Filter menu done in {toc - tic:0.4f} seconds")
+
 
     # if (request.GET):
     #     payload = request.GET
@@ -135,6 +149,7 @@ def homepage(request):
     return render(request=request,
                   context={
                       'filter_r': filter_r,
+                      'peaklist': peaklist,
                       # 'date_bf': date_bf,
                       # 'date_af': date_af,
                       # 'time_bf': time_bf,
@@ -150,34 +165,54 @@ def get_data(request):
     data = []
     labels = []
 
-    mydict = {"room_id": 1,
-                "date_start": "2020-08-09",
-                "date_end": "2020-08-15",
-                "time_start": "8:00",
-                "time_end": "16:00"}
+    # mydict = {"room_id": 1,
+    #             "date_start": "2020-08-09",
+    #             "date_end": "2020-08-15",
+    #             "time_start": "8:00",
+    #             "time_end": "16:00"}
+    #
+    # qstr = urlencode(mydict, doseq=True)
+    # res = urllib.request.urlopen(urllib.request.Request(
+    #        # url= "https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?room_id=12&date_start=2020-08-09&date_end=2020-08-15&time_start=8:00&time_end=16:00",
+    #       url = 'https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?' + qstr,
+    #       headers={'Accept': 'application/json', 'Connection': 'keep-alive'},
+    #       method='GET'),
+    #       timeout=5)
+    # response = json.loads(res.read())
+    # toc = time.perf_counter()
+    # print(f"HTTP get done in {toc - tic:0.4f} seconds")
 
-    qstr = urlencode(mydict, doseq=True)
-    res = urllib.request.urlopen(urllib.request.Request(
-           # url= "https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?room_id=12&date_start=2020-08-09&date_end=2020-08-15&time_start=8:00&time_end=16:00",
-          url = 'https://1cgw622rr4.execute-api.ap-southeast-1.amazonaws.com/test2/locationcount/?' + qstr,
-          headers={'Accept': 'application/json', 'Connection': 'keep-alive'},
-          method='GET'),
-          timeout=5)
-      # print(res.status)
-      # print(res.reason)
-      # print(json.loads(res.read()))
-    response = json.loads(res.read())
+    # room_count_s = sorted(response, key=itemgetter('count'), reverse=True)[0:num]
+    # for entry in room_count_s:
+    #     labels.append(entry['room'])
+    #     data.append(entry['count'])
+    #
+    # toc = time.perf_counter()
+    # print(f"Chart data done in {toc - tic:0.4f} seconds")
 
-    toc = time.perf_counter()
-    print(f"HTTP get done in {toc - tic:0.4f} seconds")
+    logs = PopData.objects.all()
 
-    room_count_s = sorted(response, key=itemgetter('count'), reverse=True)[0:num]
-    for entry in room_count_s:
-        labels.append(entry['room'])
-        data.append(entry['count'])
+    for log in logs:
+        data.append(log.count)
+        labels.append(log.room.name)
 
-    toc = time.perf_counter()
-    print(f"Chart data done in {toc - tic:0.4f} seconds")
+    return JsonResponse(data={
+        'labels': labels,
+        'data': data,
+    })
+
+
+def get_line(request):
+    print("GETLINE")
+    labels =['7:00', '8:00', '9:00', '10:00', '11:00', '12:00','1:00', '2:00', '3:00', '4:00', '5:00', '6:00','7:00']
+    # data =[0, 1, 2, 3, 4, 5, 6, 7,8, 9, 10, 11, 12]
+    data = []
+
+    hour_count = PeakHour.objects.all()
+    for x in hour_count:
+        data.append(x.count)
+
+    print(data)
 
     return JsonResponse(data={
         'labels': labels,

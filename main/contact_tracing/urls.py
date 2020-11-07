@@ -8,4 +8,5 @@ urlpatterns = [
     path('stat_search/', views.stat_search, name='stat_search'),
     path('ajax/load-rooms/', views.load_rooms, name='ajax_load_rooms'),
     path('get_data', views.get_data, name='get_data'),
+    path('get_line', views.get_line, name='get_line'),
 ]
