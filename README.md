@@ -71,7 +71,7 @@ Functions:
 * Aggregate Report (Creation and Aggregation)
 * Opt-out of the System
 
-link: [Mobile Application Repository] (https://github.com/ps-balucan/CTeee)
+link: [Mobile Application Repository](https://github.com/ps-balucan/CTeee)
  
 
 ### <ins>Built With </ins>
