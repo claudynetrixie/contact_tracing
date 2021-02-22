@@ -80,6 +80,7 @@ Web Server
 * Django Web Framework
 * Python
 * HTML/CSS
+* End to End Encryption (AES/CBC/PKCS5Padding)
 * Amazon Web Services (AWS)
   *  AWS Lambda for computation and processing
   *  AWS Simple Notification Service (SNS) for push notifications
