@@ -70,3 +70,16 @@ class PopData(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     count = models.IntegerField()
     rank = models.IntegerField()
+
+
+class User(models.Model):
+    key = models.BinaryField()
+    name = models.CharField(max_length=50)
+
+class Server(models.Model):
+    public_key = models.BinaryField()
+    private_key = models.BinaryField()
+
+
+
+
