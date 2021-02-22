@@ -33,6 +33,9 @@
     <li>
       <a href="#setup">Setup</a>
     </li>
+    <li>
+      <a href="#screenshots">Screenshots</a>
+    </li>
    
   </ol>
 </details>
@@ -115,4 +118,14 @@ Once `pip` has finished downloading the dependencies:
 (env)$ python manage.py runserver
 ```
 And navigate to `http://127.0.0.1:8000/`.
+
+
+## Screenshots
+
+<p float = "left">
+<img src="main/contact_tracing/static/images/web1.png" width="500" align = "center">
+<img src="main/contact_tracing/static/images/web2.png" width="500" align = "center">
+
+</p>
+
 
