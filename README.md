@@ -60,23 +60,35 @@ The web server serves as the front-end for the aggregate report of the analyst a
 Functions:
 * Temporary API token
 * Exposure Notifications
-* Weekly Aggregate Report (Creation and Aggregation)
+* Aggregate Report (Creation and Aggregation)
 
 
 ### Mobile Application
 The mobile application plays an integral role in the contact tracing system proposed. It functions as the client facing portion of our system and will be the platform that the users can use to interact with the functions offered by our contact tracing system. Despite playing an external role in the system, the mobile application still contains a back-end and front-end portion, namely the database design and the mobile application functions. 
 
-See the repo attached in the link below.
+Functions:
+* Location Logging
+* Exposure Notifications
+* Aggregate Report (Creation and Aggregation)
+* Opt-out of the System
 
-link: https://github.com/ps-balucan/CTeee
+link: [Mobile Application Repository] (https://github.com/ps-balucan/CTeee)
+ 
 
 ### Built With
 
-The front-end of the web server is implemented using Django. On the other hand, its back-end is implemented using various Amazon Web Services (AWS) such as AWS Lambda for computation and processing, AWS Simple Notification Service (SNS) for push notifications, AWS Simple Queue Service (SQS) for queueing, AWS Cognito for user authentication and AWS API Gateway for API handling. Each function of the web server would be further described below.
 
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
-* [Laravel](https://laravel.com)
+Web Server
+* Django Web Framework
+* Python
+* HTML/CSS
+* Amazon Web Services (AWS)
+  *  AWS Lambda for computation and processing
+  *  AWS Simple Notification Service (SNS) for push notifications
+  *  AWS Simple Queue Service (SQS) for queueing
+  *  AWS Cognito for user authentication
+  * AWS API Gateway for API handling
+
 
 
 
